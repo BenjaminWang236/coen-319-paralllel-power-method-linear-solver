@@ -1,5 +1,11 @@
 #include <iostream>
+#include <stdlib.h>
 #include <Eigen/Dense>
+
+/**
+ * "echo $CPLUS_INCLUDE_PATH" in Terminal to find path to Eigen
+ * Enter the Eigeh path to the includePath of VSCode to resolve the not found error
+*/
 
 typedef Eigen::Matrix<long double, Eigen::Dynamic, 1> Vec;
 typedef Eigen::Matrix<long double, Eigen::Dynamic, Eigen::Dynamic> Mat;
@@ -16,10 +22,70 @@ typedef Eigen::Matrix<long double, Eigen::Dynamic, Eigen::Dynamic> Mat;
 // typedef Matrix<std::complex<double>, 3, 3> Eigen::Matrix3cd;
 
 using namespace std;
+using namespace Eigen;
+
+Mat identity_matrix(Mat A)
+{
+    Mat I(A.rows(), A.rows());
+    I = Mat::Zero(A.rows(), A.rows());
+    for (int i = 0; i < A.rows(); i++)
+    {
+        I(i, i) = 1;
+    }
+    return I;
+}
+
+bool isSquareMatrix(Mat A)
+{
+    return A.rows() == A.cols();
+}
+
+void checkMatrixPowerOK(Mat A, int x)
+{
+    if (!isSquareMatrix(A))
+    {
+        cout << "ERROR: Matrix is NOT SQUARE!!!" << endl;
+        throw exception();
+    }
+    if (x < 0)
+    {
+        cout << "ERROR: Exponent must be positive real numbers!" << endl;
+        throw exception();
+    }
+}
 
 Mat matrix_power_naive(Mat A, int x)
 {
-    Mat result;
+    checkMatrixPowerOK(A, x);
+    Mat result(A.rows(), A.rows());
+    result = identity_matrix(A);
+    for (int i = 0; i < x; i++)
+    {
+        result *= A;
+    }
+    return result;
+}
+
+/** 
+ * O(n^3 * log_2(x)) time, for n == square matrix A's row/col size
+ * For x = 7 == 0x0111, this turns into result = I * A^1 * A^2 * A^4
+ * For x = 10 == 0x1010, this turns into result = I * A^2 * A^8
+*/
+Mat matrix_power_smart(Mat A, int x)
+{
+    checkMatrixPowerOK(A, x);
+    Mat result(A.rows(), A.rows());
+    result = identity_matrix(A);
+    cout << "x is now:\t";
+    while (x > 0)
+    {
+        cout << x << "\t";
+        if (x % 2 == 1)
+            result *= A;
+        A *= A;
+        x /= 2; // Same as x >>= 1
+    }
+    cout << endl;
     return result;
 }
 
@@ -32,12 +98,28 @@ Mat matrix_power_naive(Mat A, int x)
  */
 int main()
 {
-    cout << "Serial Version of Power Iteration/Method Linear Solver" << endl;
+    try
+    {
+        cout << "Serial Version of Power Iteration/Method Linear Solver" << endl;
+        Mat A(2, 2);
+        A << 1, 2, 3, 4;
+        cout << "Matrix A sizes is rows: " << A.rows() << " and columns: " << A.cols() << endl;
+        Mat B = matrix_power_naive(A, 2);
+        cout << "Matrix B: "<< endl << B << endl;
+        Mat C = matrix_power_smart(A, 10);
+        cout << "Matrix C: " << endl << C << endl;
 
-    Mat(2, 2) A;
-    A << 1, 2, 3, 4;
-    cout << "Matrix A sizes is rows: " << A.rows() << " and columns: " << A.cols() << endl;
-    matrix_power_naive(A, 2);
+        // TODO: Now that Matrix Exponentiation is done, implement Matrix-Vector Multiplication, then Power Iterations Algorithm
+    }
+    catch(exception e)
+    {
+        return EXIT_FAILURE;
+    }
+    catch (...)
+    {
+        cout << "Default Exception" << endl;
+        return EXIT_FAILURE;
+    }
 
     return 0;
 }
