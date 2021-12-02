@@ -95,6 +95,8 @@ Mat matrix_power_smart(Mat A, int x)
  * Referencing the Pseudocode in tutorial:
  * @cite Mike Koltsov 
  * @link https://www.hackerearth.com/practice/notes/matrix-exponentiation-1/ @endlink
+ * 
+ * Run with "g++ $(pkg-config --cflags eigen3) power_iteration_serial.cpp -o power_iteration_serial && ./power_iteration_serial"
  */
 int main()
 {
@@ -106,7 +108,7 @@ int main()
         cout << "Matrix A sizes is rows: " << A.rows() << " and columns: " << A.cols() << endl;
         Mat B = matrix_power_naive(A, 2);
         cout << "Matrix B: "<< endl << B << endl;
-        Mat C = matrix_power_smart(A, 10);
+        Mat C = matrix_power_smart(A, 7);
         cout << "Matrix C: " << endl << C << endl;
 
         // TODO: Now that Matrix Exponentiation is done, implement Matrix-Vector Multiplication, then Power Iterations Algorithm
