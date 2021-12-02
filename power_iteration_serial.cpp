@@ -5,6 +5,7 @@
 /**
  * "echo $CPLUS_INCLUDE_PATH" in Terminal to find path to Eigen
  * Enter the Eigeh path to the includePath of VSCode to resolve the not found error
+ * @link
 */
 
 typedef Eigen::Matrix<long double, Eigen::Dynamic, 1> Vec;
@@ -97,6 +98,7 @@ Mat matrix_power_smart(Mat A, int x)
  * @link https://www.hackerearth.com/practice/notes/matrix-exponentiation-1/ @endlink
  * 
  * Run with "g++ $(pkg-config --cflags eigen3) power_iteration_serial.cpp -o power_iteration_serial && ./power_iteration_serial"
+ * @link https://stackoverflow.com/questions/21984971/how-to-compile-a-c-program-using-eigen-without-specifying-the-i-flag @endlink
  */
 int main()
 {
