@@ -1,18 +1,15 @@
 #include <iostream>
 #include <stdlib.h>
-#include <Eigen/Dense>
 #include <cmath>
+#include <Eigen/Dense>
 #include <omp.h>
 #include <string>
-#include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cstdlib>
-#include <cstring>
 #include <vector>
 
-#include <errno.h>
-#include <dirent.h>
+// #include <errno.h>
+// #include <dirent.h>
 
 #define MAX_ITER 100
 #define EPSILON 0.000001
@@ -147,8 +144,8 @@ Vec pageRank_power_iter_modified_start(Mat A, int vector_length, double alpha)
     cout << "Execution Time: " << (t2 - t1) << endl;
 
     // Verify that the sum of the elements of the vector is 1.0
-    bool rst_ok = (abs(1.0 - rst.sum()) < EPSILON);
-    if (!rst_ok)
+    long double diff = abs(1.0 - (long double)rst.sum());
+    if (!(diff < EPSILON))
     {
         cout << "ERROR: rst.sum(): " << rst.sum() << " != 1.0 or close enough" << endl;
         throw exception();
@@ -285,8 +282,6 @@ int main(int argc, char *argv[])
             cout << "argv[" << i << "]:\t" << argv[i] << endl;
         }
 #endif
-
-
         if (argc != 5)
         {
             cerr << "Invalid options." << endl
@@ -299,21 +294,11 @@ int main(int argc, char *argv[])
         omp_set_num_threads(nthreads);  // auto t1 = omp_get_wtime();
 
         // Read the graph file:
-        // Read into a Matrix of Row-From Column-To as Binary 1/0
-        // Transpose the Matrix to get the Column-From Row-To, since we're counting in-Links
-        // To convert into the linear system of equations,
-        // Divide each each element of a ROW of transposed Matrix by the sum of the COLUMN
-        // Each ROW corresponds to an equation of a graph node in the pageRank equation
-
-        // Read the graph file:
         // NOTE: Run in terminal with "clear && make clean && make && ./pageRank_power_iter_omp ./test/demo1.txt ./test/demo1-pr.txt -t 1 > debug.txt"
         Mat mat = read_Graph_return_Matrix(graph_file);
 
         // Mat M(3, 3);
-        // M << 0.5, 0.5, 0, 0.5, 0, 0, 0, 0.5, 1;
-        // cout << "Matrix M:" << endl
-        //      << M << endl;
-        // Vec rst = pageRank_power_iter_modified_start(M, M.rows(), TELEPORT_PARAMETER);
+        // M << 0.5, 0.5, 0, 0.5, 0, 0, 0, 0.5, 1;  // demo1.txt
         Vec rst = pageRank_power_iter_modified_start(mat, mat.rows(), TELEPORT_PARAMETER);
         cout << "Vector result of M * v_o using Modified PageRank is:\n"
              << rst << endl;
