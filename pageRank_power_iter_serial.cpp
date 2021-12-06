@@ -221,24 +221,24 @@ int main()
 {
     try
     {
-        cout << "Serial Version of Power Iteration/Method Linear Solver" << endl;
-        Mat A(2, 2);
-        A << 1, 2, 3, 4;
-        cout << "Matrix A sizes is rows: " << A.rows() << " and columns: " << A.cols() << endl;
-        Mat B = matrix_power_naive(A, 2);
-        cout << "Matrix B: " << endl
-             << B << endl;
-        Mat C = matrix_power_smart(A, 7);
-        cout << "Matrix C: " << endl
-             << C << endl;
+        cout << "Serial Version of PageRank Power Iteration/Method Linear Solver" << endl;
+        // Mat A(2, 2);
+        // A << 1, 2, 3, 4;
+        // cout << "Matrix A sizes is rows: " << A.rows() << " and columns: " << A.cols() << endl;
+        // Mat B = matrix_power_naive(A, 2);
+        // cout << "Matrix B: " << endl
+        //      << B << endl;
+        // Mat C = matrix_power_smart(A, 7);
+        // cout << "Matrix C: " << endl
+        //      << C << endl;
 
-        Mat M(3, 3);
-        M << 0.5, 0.5, 0, 0.5, 0, 1, 0, 0.5, 0;
-        cout << "Matrix M: " << endl
-             << M << endl;
-        Vec rst = pageRank_power_iter_naive_start(M, M.rows());
-        cout << "Vector result of M * v_o is:\n"
-             << rst << endl;
+        // Mat M(3, 3);
+        // M << 0.5, 0.5, 0, 0.5, 0, 1, 0, 0.5, 0;
+        // cout << "Matrix M: " << endl
+        //      << M << endl;
+        // Vec rst = pageRank_power_iter_naive_start(M, M.rows());
+        // cout << "Vector result of M * v_o is:\n"
+        //      << rst << endl;
 
         Mat M2(3, 3);
         M2 << 0.5, 0.5, 0, 0.5, 0, 0, 0, 0.5, 1;
@@ -248,11 +248,11 @@ int main()
         cout << "Vector result of M * v_o is:\n"
              << rst2 << endl;
 
-        Mat M3(3, 3);
-        M3 << 0.5, 0.5, 0, 0.5, 0, 1, 0, 0.5, 0;
-        M3 *= 0.5;
-        cout << "Matrix M3 multiplied by 0.5: " << endl
-             << M3 << endl;
+        // Mat M3(3, 3);
+        // M3 << 0.5, 0.5, 0, 0.5, 0, 1, 0, 0.5, 0;
+        // M3 *= 0.5;
+        // cout << "Matrix M3 multiplied by 0.5: " << endl
+        //      << M3 << endl;
 
         Vec rst3 = pageRank_power_iter_modified_start(M2, M2.rows(), TELEPORT_PARAMETER);
         cout << "Vector result of M * v_o using Modified PageRank is:\n"
