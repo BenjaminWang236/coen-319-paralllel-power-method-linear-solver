@@ -94,7 +94,7 @@ int main()
 {
     try
     {
-        cout << "OpenMP Version of PageRank Power Iteration/Method Linear Solver" << endl;
+        cout << "C++ Native Threads Version of PageRank Power Iteration/Method Linear Solver" << endl;
 
         Mat M(3, 3);
         M << 0.5, 0.5, 0, 0.5, 0, 0, 0, 0.5, 1;
