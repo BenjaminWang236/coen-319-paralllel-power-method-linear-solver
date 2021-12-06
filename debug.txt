@@ -1,0 +1,38 @@
+Serial Version of Power Iteration/Method Linear Solver
+Matrix A sizes is rows: 2 and columns: 2
+Matrix B: 
+ 7 10
+15 22
+Matrix C: 
+30853 44966
+67449 98302
+Matrix M: 
+0.5 0.5   0
+0.5   0   1
+  0 0.5   0
+Starting vector: 0.333333 0.333333 0.333333
+Converged @ Iteration 5: 0.4 0.4 0.2
+Vector result of M * v_o is:
+0.4
+0.4
+0.2
+Matrix M2: 
+0.5 0.5   0
+0.5   0   0
+  0 0.5   1
+Starting vector: 0.333333 0.333333 0.333333
+Converged @ Iteration 5:  2.0935e-67 1.29385e-67           1
+Vector result of M * v_o is:
+ 2.0935e-67
+1.29385e-67
+          1
+Matrix M3 multiplied by 0.5: 
+0.25 0.25    0
+0.25    0  0.5
+   0 0.25    0
+Starting vector: 0.333333 0.333333 0.333333
+Converged @ Iteration 33: 0.212121 0.151515 0.636364
+Vector result of M * v_o using Modified PageRank is:
+0.212121
+0.151515
+0.636364
