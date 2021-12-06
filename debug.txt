@@ -1,17 +1,11 @@
-Serial Version of PageRank Power Iteration/Method Linear Solver
-Matrix M2: 
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Matrix M:
 0.5 0.5   0
 0.5   0   0
   0 0.5   1
 Starting vector: 0.333333 0.333333 0.333333
-Converged @ Iteration 5:  2.0935e-67 1.29385e-67           1
-Vector result of M * v_o is:
- 2.0935e-67
-1.29385e-67
-          1
-Starting vector: 0.333333 0.333333 0.333333
-Converged @ Iteration 33: 0.212121 0.151515 0.636364
+Converged @ Iteration 17: 0.212188 0.151557 0.636255
 Vector result of M * v_o using Modified PageRank is:
-0.212121
-0.151515
-0.636364
+0.212188
+0.151557
+0.636255
