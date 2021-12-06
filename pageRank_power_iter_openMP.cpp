@@ -6,14 +6,16 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 
 #include <errno.h>
 #include <dirent.h>
 
-#define MAX_ITER 50
-#define EPSILON 0.0001
+#define MAX_ITER 100
+#define EPSILON 0.000001
 #define DEBUG_PRINT 0 // 0: no print, 1: print
 #define TELEPORT_PARAMETER 0.8
 
@@ -88,6 +90,7 @@ Vec matrix_vector_multiply(Mat A, Vec x)
     return result;
 }
 
+// Vec pageRank_power_iter_modified(Mat A, Mat orig_A, Vec v_original, Vec tp)
 Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
 {
     Vec result = Vec::Zero(v_original.rows());
@@ -100,8 +103,8 @@ Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
         if (vector_approx_equal(result, prevVector, EPSILON))
         {
 #if DEBUG_PRINT
-            cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
-#else
+//             cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
+// #else
             cout << "Converged @ Iteration " << i << endl;
 #endif
             return result;
@@ -111,6 +114,7 @@ Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
              << result.transpose() << endl;
 #endif
         prevVector = result;
+        // prevVector = matrix_vector_multiply(orig_A, prevVector);
     }
     cout << "Converged @ Iteration " << MAX_ITER << " (Failed to Converge): " << result.transpose() << endl;
     throw exception();
@@ -131,16 +135,131 @@ Vec pageRank_power_iter_modified_start(Mat A, int vector_length, double alpha)
     cout << "Starting vector: " << v.transpose() << endl;
 
     // Multiply the Matrix A by weight alpha
-    A *= alpha;
+    // Mat mod_A = A * alpha;
 
     // Teleporting cofficients vector:
     double beta = (1 - alpha) / vector_length;
     // Vec tp = Vec::Constant(vector_length, beta);
     auto t1 = omp_get_wtime();
-    Vec rst = pageRank_power_iter_modified(A, v, Vec::Constant(vector_length, beta));
+    // Vec rst = pageRank_power_iter_modified(mod_A, A, v, Vec::Constant(vector_length, beta));
+    Vec rst = pageRank_power_iter_modified(A * alpha, v, Vec::Constant(vector_length, beta));
     auto t2 = omp_get_wtime();
     cout << "Execution Time: " << (t2 - t1) << endl;
+
+    // Verify that the sum of the elements of the vector is 1.0
+    bool rst_ok = (abs(1.0 - rst.sum()) < EPSILON);
+    if (!rst_ok)
+    {
+        cout << "ERROR: rst.sum(): " << rst.sum() << " != 1.0 or close enough" << endl;
+        throw exception();
+    }
+#if DEBUG_PRINT
+    cout << "rst.sum(): " << rst.sum() << endl;
+#endif
     return rst;
+}
+
+Mat read_Graph_return_Matrix(string file_name)
+{
+    // Mat m = Mat::Constant(3, 3, 1);
+    // cout << "Testing resize():\nOriginal matrix:\n" << m << endl;
+    // m.conservativeResize(5, 5);
+    // cout << "Resized matrix:\n" << m << endl;
+    Mat m = Mat::Zero(1, 1);
+    ifstream file(file_name);
+    if (!file.is_open())
+    {
+        cout << "ERROR: Could not open file: " << file_name << endl;
+        throw exception();
+        return m;
+    }
+    string line;
+    string delim = " ";
+    int from = 0, to = 0;
+    while(getline(file, line))
+    {
+#if DEBUG_PRINT
+        cout << line << endl;
+#endif
+        // vector<int> elems;
+        string elem;
+        // split(line, delim, elems);   // split not declared in namespace std
+        stringstream ss(line);
+        ss >> elem;
+        from = atoi(elem.c_str());
+        ss >> elem;
+        to = atoi(elem.c_str());
+        // cout << "from: " << from << " to: " << to << endl;
+        if (m.rows() < from + 1)
+        {
+            m.conservativeResize(from + 1, m.cols());
+            m.row(from).setZero();
+#if DEBUG_PRINT
+            cout << "Row expanded m:\n" << m << endl;
+#endif
+        }
+        if (m.cols() < to + 1)
+        {
+            m.conservativeResize(m.rows(), to + 1);
+            m.col(to).setZero();
+#if DEBUG_PRINT
+            cout << "Column expanded m:\n" << m << endl;
+#endif
+        }
+        m(from, to) = 1;
+    }
+    file.close();
+    if (m.rows() < m.cols())
+    {
+        int orig_nrows = m.rows();
+        m.conservativeResize(m.cols(), m.cols());
+        for (int i = orig_nrows; i < m.cols(); i++)
+        {
+            m.row(i).setZero();
+        }
+    }
+    if (m.cols() < m.rows())
+    {
+        int orig_ncols = m.cols();
+        m.conservativeResize(m.rows(), m.rows());
+        for (int i = orig_ncols; i < m.rows(); i++)
+        {
+            m.col(i).setZero();
+        }
+    }
+#if DEBUG_PRINT
+    cout << "Matrix read from file:\n" << m << endl;
+#endif
+
+    // Transpose the Matrix to get the Column-From Row-To, since we're counting in-Links
+    // To convert into the linear system of equations,
+    // Divide each each element of a ROW of transposed Matrix by the sum of the COLUMN
+    // Each ROW corresponds to an equation of a graph node in the pageRank equation
+    m.transposeInPlace();
+#if DEBUG_PRINT
+    cout << "Transposed Matrix:\n" << m << endl;
+#endif
+    vector<long double> col_sums;   // Number of Out-Links from a node, since Column is now From/Out-Links
+    for (int i = 0; i < m.cols(); i++)
+    {
+        col_sums.push_back(m.col(i).sum());
+#if DEBUG_PRINT
+        cout << "col_sums[" << i << "] = " << col_sums[i] << endl;
+#endif
+    }
+    for (int i = 0; i < m.rows(); i++)
+    {
+        for (int j = 0; j < m.cols(); j++)
+        {
+            m(i, j) /= col_sums[j];
+        }
+    }
+#if DEBUG_PRINT
+    cout << "Transposed Matrix with pageRank algorithm:\n" << m << endl;
+#endif
+
+
+    return m;
 }
 
 /** 
@@ -186,11 +305,16 @@ int main(int argc, char *argv[])
         // Divide each each element of a ROW of transposed Matrix by the sum of the COLUMN
         // Each ROW corresponds to an equation of a graph node in the pageRank equation
 
-        Mat M(3, 3);
-        M << 0.5, 0.5, 0, 0.5, 0, 0, 0, 0.5, 1;
-        cout << "Matrix M:" << endl
-             << M << endl;
-        Vec rst = pageRank_power_iter_modified_start(M, M.rows(), TELEPORT_PARAMETER);
+        // Read the graph file:
+        // NOTE: Run in terminal with "clear && make clean && make && ./pageRank_power_iter_omp ./test/demo1.txt ./test/demo1.txt -t 1 > debug.txt"
+        Mat mat = read_Graph_return_Matrix(graph_file);
+
+        // Mat M(3, 3);
+        // M << 0.5, 0.5, 0, 0.5, 0, 0, 0, 0.5, 1;
+        // cout << "Matrix M:" << endl
+        //      << M << endl;
+        // Vec rst = pageRank_power_iter_modified_start(M, M.rows(), TELEPORT_PARAMETER);
+        Vec rst = pageRank_power_iter_modified_start(mat, mat.rows(), TELEPORT_PARAMETER);
         cout << "Vector result of M * v_o using Modified PageRank is:\n"
              << rst << endl;
     }

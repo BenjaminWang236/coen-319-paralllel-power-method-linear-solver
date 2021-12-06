@@ -1,12 +1,7 @@
 OpenMP Version of PageRank Power Iteration/Method Linear Solver
-Matrix M:
-0.5 0.5   0
-0.5   0   0
-  0 0.5   1
 Starting vector: 0.333333 0.333333 0.333333
-Converged @ Iteration 17
-Execution Time: 5.7546e-05
+Execution Time: 6.11611e-05
 Vector result of M * v_o using Modified PageRank is:
-0.212188
-0.151557
-0.636255
+0.212122
+0.151516
+0.636362
