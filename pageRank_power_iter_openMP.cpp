@@ -90,7 +90,8 @@ Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
         result = matrix_vector_multiply(A, prevVector) + tp;
         if (vector_approx_equal(result, prevVector, EPSILON))
         {
-            cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
+            // cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
+            cout << "Converged @ Iteration " << i << endl;
             return result;
         }
 #if DEBUG_PRINT
@@ -155,6 +156,8 @@ int main()
         Vec rst = pageRank_power_iter_modified_start(M, M.rows(), TELEPORT_PARAMETER);
         cout << "Vector result of M * v_o using Modified PageRank is:\n"
              << rst << endl;
+
+        cout << "Partial M: " << endl << M.block(0, 0, 2, 3) << endl;
     }
     catch (exception const &e) // Solving warning: catching polymorphic type ‘class std::exception’ by value with "const &"
     {
