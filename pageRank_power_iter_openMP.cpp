@@ -36,7 +36,8 @@ long double l2_norm(Vec v)
     // Parallelizing the summation of the squares of the elements of a vector and the squaring of the elements of a vector
     // Not parallelizing the square-root operation
     long double sum = 0.0;
-#pragma omp parallel for reduction(+:sum)
+#pragma omp parallel for reduction(+ \
+                                   : sum)
     for (int i = 0; i < v.rows(); i++)
     {
         sum += v(i) * v(i);
@@ -100,8 +101,8 @@ Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
         if (vector_approx_equal(result, prevVector, EPSILON))
         {
 #if DEBUG_PRINT
-//             cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
-// #else
+            //             cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
+            // #else
             cout << "Converged @ Iteration " << i << endl;
 #endif
             return result;
@@ -173,7 +174,7 @@ Mat read_Graph_return_Matrix(string file_name)
     string line;
     string delim = " ";
     int from = 0, to = 0;
-    while(getline(file, line))
+    while (getline(file, line))
     {
 #if DEBUG_PRINT
         cout << line << endl;
@@ -192,7 +193,8 @@ Mat read_Graph_return_Matrix(string file_name)
             m.conservativeResize(from + 1, m.cols());
             m.row(from).setZero();
 #if DEBUG_PRINT
-            cout << "Row expanded m:\n" << m << endl;
+            cout << "Row expanded m:\n"
+                 << m << endl;
 #endif
         }
         if (m.cols() < to + 1)
@@ -200,7 +202,8 @@ Mat read_Graph_return_Matrix(string file_name)
             m.conservativeResize(m.rows(), to + 1);
             m.col(to).setZero();
 #if DEBUG_PRINT
-            cout << "Column expanded m:\n" << m << endl;
+            cout << "Column expanded m:\n"
+                 << m << endl;
 #endif
         }
         m(from, to) = 1;
@@ -225,7 +228,8 @@ Mat read_Graph_return_Matrix(string file_name)
         }
     }
 #if DEBUG_PRINT
-    cout << "Matrix read from file:\n" << m << endl;
+    cout << "Matrix read from file:\n"
+         << m << endl;
 #endif
 
     // Transpose the Matrix to get the Column-From Row-To, since we're counting in-Links
@@ -234,9 +238,10 @@ Mat read_Graph_return_Matrix(string file_name)
     // Each ROW corresponds to an equation of a graph node in the pageRank equation
     m.transposeInPlace();
 #if DEBUG_PRINT
-    cout << "Transposed Matrix:\n" << m << endl;
+    cout << "Transposed Matrix:\n"
+         << m << endl;
 #endif
-    vector<long double> col_sums;   // Number of Out-Links from a node, since Column is now From/Out-Links
+    vector<long double> col_sums; // Number of Out-Links from a node, since Column is now From/Out-Links
     for (int i = 0; i < m.cols(); i++)
     {
         col_sums.push_back(m.col(i).sum());
@@ -252,9 +257,9 @@ Mat read_Graph_return_Matrix(string file_name)
         }
     }
 #if DEBUG_PRINT
-    cout << "Transposed Matrix with pageRank algorithm:\n" << m << endl;
+    cout << "Transposed Matrix with pageRank algorithm:\n"
+         << m << endl;
 #endif
-
 
     return m;
 }
@@ -285,13 +290,13 @@ int main(int argc, char *argv[])
         if (argc != 5)
         {
             cerr << "Invalid options." << endl
-             << "<program> <graph_file> <pagerank_file> <-t> <num_threads>" << endl;
+                 << "<program> <graph_file> <pagerank_file> <-t> <num_threads>" << endl;
             exit(1);
         }
         string graph_file = argv[1];
         string pagerank_file = argv[2];
         int nthreads = atoi(argv[4]);
-        omp_set_num_threads(nthreads);  // auto t1 = omp_get_wtime();
+        omp_set_num_threads(nthreads); // auto t1 = omp_get_wtime();
 
         // Read the graph file:
         // NOTE: Run in terminal with "clear && make clean && make && ./pageRank_power_iter_omp ./test/demo1.txt ./test/demo1-pr.txt -t 1 > debug.txt"
