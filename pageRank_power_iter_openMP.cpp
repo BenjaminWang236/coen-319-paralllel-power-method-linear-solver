@@ -306,7 +306,7 @@ int main(int argc, char *argv[])
         // Each ROW corresponds to an equation of a graph node in the pageRank equation
 
         // Read the graph file:
-        // NOTE: Run in terminal with "clear && make clean && make && ./pageRank_power_iter_omp ./test/demo1.txt ./test/demo1.txt -t 1 > debug.txt"
+        // NOTE: Run in terminal with "clear && make clean && make && ./pageRank_power_iter_omp ./test/demo1.txt ./test/demo1-pr.txt -t 1 > debug.txt"
         Mat mat = read_Graph_return_Matrix(graph_file);
 
         // Mat M(3, 3);
