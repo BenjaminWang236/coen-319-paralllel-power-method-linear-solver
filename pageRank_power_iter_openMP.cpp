@@ -3,6 +3,14 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <omp.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <cstring>
+
+#include <errno.h>
+#include <dirent.h>
 
 #define MAX_ITER 50
 #define EPSILON 0.0001
@@ -29,6 +37,7 @@ long double l2_norm(Vec v)
     // Parallelizing the summation of the squares of the elements of a vector and the squaring of the elements of a vector
     // Not parallelizing the square-root operation
     long double sum = 0.0;
+#pragma omp parallel for reduction(+:sum)
     for (int i = 0; i < v.rows(); i++)
     {
         sum += v(i) * v(i);
@@ -90,8 +99,11 @@ Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
         result = matrix_vector_multiply(A, prevVector) + tp;
         if (vector_approx_equal(result, prevVector, EPSILON))
         {
-            // cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
+#if DEBUG_PRINT
+            cout << "Converged @ Iteration " << i << ": " << result.transpose() << endl;
+#else
             cout << "Converged @ Iteration " << i << endl;
+#endif
             return result;
         }
 #if DEBUG_PRINT
@@ -122,14 +134,13 @@ Vec pageRank_power_iter_modified_start(Mat A, int vector_length, double alpha)
     A *= alpha;
 
     // Teleporting cofficients vector:
-    Vec tp(vector_length);
     double beta = (1 - alpha) / vector_length;
-    for (int i = 0; i < vector_length; i++)
-    {
-        tp(i) = beta;
-    }
-
-    return pageRank_power_iter_modified(A, v, tp);
+    // Vec tp = Vec::Constant(vector_length, beta);
+    auto t1 = omp_get_wtime();
+    Vec rst = pageRank_power_iter_modified(A, v, Vec::Constant(vector_length, beta));
+    auto t2 = omp_get_wtime();
+    cout << "Execution Time: " << (t2 - t1) << endl;
+    return rst;
 }
 
 /** 
@@ -143,11 +154,37 @@ Vec pageRank_power_iter_modified_start(Mat A, int vector_length, double alpha)
  * OR use the Makefile
  * @link https://stackoverflow.com/questions/21984971/how-to-compile-a-c-program-using-eigen-without-specifying-the-i-flag @endlink
  */
-int main()
+int main(int argc, char *argv[])
 {
     try
     {
         cout << "OpenMP Version of PageRank Power Iteration/Method Linear Solver" << endl;
+#if DEBUG_PRINT
+        cout << "argc:\t" << argc << endl;
+        for (int i = 0; i < argc; i++)
+        {
+            cout << "argv[" << i << "]:\t" << argv[i] << endl;
+        }
+#endif
+
+
+        if (argc != 5)
+        {
+            cerr << "Invalid options." << endl
+             << "<program> <graph_file> <pagerank_file> <-t> <num_threads>" << endl;
+            exit(1);
+        }
+        string graph_file = argv[1];
+        string pagerank_file = argv[2];
+        int nthreads = atoi(argv[4]);
+        omp_set_num_threads(nthreads);  // auto t1 = omp_get_wtime();
+
+        // Read the graph file:
+        // Read into a Matrix of Row-From Column-To as Binary 1/0
+        // Transpose the Matrix to get the Column-From Row-To, since we're counting in-Links
+        // To convert into the linear system of equations,
+        // Divide each each element of a ROW of transposed Matrix by the sum of the COLUMN
+        // Each ROW corresponds to an equation of a graph node in the pageRank equation
 
         Mat M(3, 3);
         M << 0.5, 0.5, 0, 0.5, 0, 0, 0, 0.5, 1;
@@ -156,8 +193,6 @@ int main()
         Vec rst = pageRank_power_iter_modified_start(M, M.rows(), TELEPORT_PARAMETER);
         cout << "Vector result of M * v_o using Modified PageRank is:\n"
              << rst << endl;
-
-        cout << "Partial M: " << endl << M.block(0, 0, 2, 3) << endl;
     }
     catch (exception const &e) // Solving warning: catching polymorphic type ‘class std::exception’ by value with "const &"
     {
