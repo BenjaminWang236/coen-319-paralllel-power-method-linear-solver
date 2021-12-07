@@ -99,16 +99,16 @@ Vec matrix_vector_multiply(Mat A, Vec x)
         }
     }
 
-    for (int i = 0; i < result.rows(); i++)
-    {
-        // result(i) = A.row(i).dot(x);
-        long double sum = 0.0;
-        for (int j = 0; j < x.rows(); j++)
-        {
-            sum += A(i, j) * x(j);
-        }
-        result(i) = sum;
-    }
+    // for (int i = 0; i < result.rows(); i++)
+    // {
+    //     // result(i) = A.row(i).dot(x);
+    //     long double sum = 0.0;
+    //     for (int j = 0; j < x.rows(); j++)
+    //     {
+    //         sum += A(i, j) * x(j);
+    //     }
+    //     result(i) = sum;
+    // }
 
     // result = A * x;
     // return A * x;
