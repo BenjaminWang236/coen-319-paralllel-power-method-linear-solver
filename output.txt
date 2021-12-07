@@ -1,0 +1,209 @@
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/bull.txt
+Max number of threads:	1
+Starting vector: 0.2 0.2 0.2 0.2 0.2
+Execution Time: 6.04938e-05
+Vector result of M * v_o using Modified PageRank is:
+   0.04
+  0.056
+ 0.0784
+ 0.0624
+0.10272
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/chvatal.txt
+Max number of threads:	1
+Starting vector: 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333
+Execution Time: 7.7141e-05
+Vector result of M * v_o using Modified PageRank is:
+0.0166667
+0.0166667
+     0.02
+0.0166667
+0.0166667
+0.0233333
+0.0346667
+0.0510667
+0.0661867
+ 0.085616
+     0.03
+    0.032
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/coxeter.txt
+Max number of threads:	1
+Starting vector: 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143 0.0357143
+Execution Time: 0.000201964
+Vector result of M * v_o using Modified PageRank is:
+0.00714286
+0.00904762
+0.00904762
+ 0.0107619
+ 0.0107619
+ 0.0114476
+ 0.0160267
+0.00904762
+ 0.0107619
+ 0.0114476
+ 0.0199642
+ 0.0117219
+ 0.0114476
+ 0.0107619
+ 0.0117219
+ 0.0151285
+ 0.0118316
+ 0.0164107
+ 0.0221878
+  0.021546
+ 0.0293088
+ 0.0151285
+ 0.0117219
+  0.017499
+ 0.0154507
+ 0.0254468
+ 0.0301339
+ 0.0368779
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/cubical.txt
+Max number of threads:	1
+Starting vector: 0.125 0.125 0.125 0.125 0.125 0.125 0.125 0.125
+Converged @ Iteration 100 (Failed to Converge): -nan -nan -nan -nan -nan -nan -nan -nan
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/diamond.txt
+Max number of threads:	1
+Starting vector: 0.25 0.25 0.25 0.25
+Execution Time: 5.4149e-05
+Vector result of M * v_o using Modified PageRank is:
+  0.05
+  0.07
+ 0.098
+0.1564
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/dodecahedral.txt
+Max number of threads:	1
+Starting vector: 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05
+Execution Time: 0.000203475
+Vector result of M * v_o using Modified PageRank is:
+     0.01
+0.0126667
+ 0.115907
+0.0563628
+0.0411705
+0.0197131
+0.0789948
+0.0563628
+0.0325452
+ 0.053402
+ 0.049483
+ 0.039246
+0.0400394
+0.0337088
+0.0566279
+0.0297933
+0.0264243
+0.0490781
+0.0762294
+ 0.122245
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/folkman.txt
+Max number of threads:	1
+Starting vector: 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05
+Execution Time: 9.38089e-05
+Vector result of M * v_o using Modified PageRank is:
+    0.01
+    0.01
+    0.01
+    0.01
+    0.01
+   0.014
+   0.014
+ 0.03992
+   0.014
+   0.014
+   0.014
+   0.014
+   0.014
+   0.014
+   0.014
+  0.0324
+0.042768
+0.042768
+  0.0324
+  0.0324
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/franklin.txt
+Max number of threads:	1
+Starting vector: 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333
+Execution Time: 8.65839e-05
+Vector result of M * v_o using Modified PageRank is:
+0.0166667
+0.0211111
+0.0211111
+0.0251111
+0.0251111
+0.0367556
+0.0311556
+0.0545156
+0.0415911
+0.0769156
+0.0866436
+ 0.112662
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/frucht.txt
+Max number of threads:	1
+Starting vector: 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333 0.0833333
+Execution Time: 9.58501e-05
+Vector result of M * v_o using Modified PageRank is:
+0.0166667
+0.0211111
+0.0211111
+0.0251111
+0.0267111
+0.0251111
+0.0351556
+0.0447911
+0.0452676
+0.0808416
+0.0351556
+  0.05992
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/grotzsch.txt
+Max number of threads:	1
+Starting vector: 0.0909091 0.0909091 0.0909091 0.0909091 0.0909091 0.0909091 0.0909091 0.0909091 0.0909091 0.0909091 0.0909091
+Execution Time: 7.39349e-05
+Vector result of M * v_o using Modified PageRank is:
+0.0181818
+0.0218182
+0.0218182
+    0.024
+   0.0304
+0.0181818
+0.0327273
+0.0368873
+0.0333091
+0.0390691
+0.0311273
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/dodecahedral.txt
+Max number of threads:	2
+Starting vector: 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05
+Execution Time: 0.000611018
+Vector result of M * v_o using Modified PageRank is:
+     0.01
+0.0126667
+0.0356547
+0.0242618
+0.0243715
+0.0153333
+0.0255365
+0.0242618
+0.0197048
+0.0321641
+     0.01
+     0.01
+     0.01
+     0.01
+     0.01
+     0.01
+     0.01
+     0.01
+     0.01
+     0.01
