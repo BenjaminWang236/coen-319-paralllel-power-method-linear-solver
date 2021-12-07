@@ -13,7 +13,7 @@
 
 #define MAX_ITER 100
 #define EPSILON 0.000001
-#define DEBUG_PRINT 0 // 0: no print, 1: print
+#define DEBUG_PRINT 1 // 0: no print, 1: print
 #define TELEPORT_PARAMETER 0.8
 
 /**
@@ -79,36 +79,35 @@ Vec matrix_vector_multiply(Mat A, Vec x)
 #if DEBUG_PRINT
     cout << "tile_size: " << tile_size << endl;
 #endif
-
-    long double sum = 0.0;
     int local_tile_size = tile_size, A_rows = A.rows(), A_cols = A.cols(), x_rows = x.rows();
-    Mat A_tile;
-#pragma omp parallel for schedule(dynamic, 1) firstprivate(A_tile, local_tile_size, A_rows, A_cols, x_rows) shared(result, A, x)
-    for (int i = 0; i < A_rows; i += tile_size)
-    {
-        if (i + local_tile_size > A_rows)
-            local_tile_size = A_rows - i;
-        A_tile = A.block(i, 0, local_tile_size, A_cols);
-        for (int ii = 0; ii < local_tile_size; ii++)
-        {
-            for (int j = 0; j < x_rows; j++)
-            {
-                sum += A_tile(ii, j) * x(j);
-            }
-            result(ii) = sum;
-        }
-    }
+// #pragma omp parallel for schedule(dynamic, 1) firstprivate(local_tile_size, A_rows, A_cols, x_rows) shared(result, A, x)
+//     for (int i = 0; i < A_rows; i += tile_size)
+//     {
+//         if (i + local_tile_size > A_rows)
+//             local_tile_size = A_rows - i;
+//         Mat A_tile = A.block(i, 0, local_tile_size, A_cols);
+//         for (int ii = 0; ii < local_tile_size; ii++)
+//         {
+//             long double sum = 0.0;
+//             for (int j = 0; j < x_rows; j++)
+//             {
+//                 sum += A_tile(ii, j) * x(j);
+//             }
+//             result(ii) = sum;
+//         }
+//     }
 
-    // for (int i = 0; i < result.rows(); i++)
-    // {
-    //     // result(i) = A.row(i).dot(x);
-    //     long double sum = 0.0;
-    //     for (int j = 0; j < x.rows(); j++)
-    //     {
-    //         sum += A(i, j) * x(j);
-    //     }
-    //     result(i) = sum;
-    // }
+
+    for (int i = 0; i < result.rows(); i++)
+    {
+        // result(i) = A.row(i).dot(x);
+        long double sum = 0.0;
+        for (int j = 0; j < x.rows(); j++)
+        {
+            sum += A(i, j) * x(j);
+        }
+        result(i) = sum;
+    }
 
     // result = A * x;
     // return A * x;
@@ -217,8 +216,15 @@ Mat read_Graph_return_Matrix(string file_name)
         // cout << "from: " << from << " to: " << to << endl;
         if (m.rows() < from + 1)
         {
-            m.conservativeResize(from + 1, m.cols());
-            m.row(from).setZero();
+            // m.conservativeResize(from + 1, m.cols());
+            // m.conservativeResize(from + 1, from + 1);
+            // m.row(from).setZero();
+            int orig_nrows = m.rows();
+            m.conservativeResize(from + 1, from + 1);
+            for (int i = orig_nrows; i < m.rows(); i++)
+            {
+                m.row(i).setZero();
+            }
 #if DEBUG_PRINT
             cout << "Row expanded m:\n"
                  << m << endl;
@@ -226,8 +232,15 @@ Mat read_Graph_return_Matrix(string file_name)
         }
         if (m.cols() < to + 1)
         {
-            m.conservativeResize(m.rows(), to + 1);
-            m.col(to).setZero();
+            // m.conservativeResize(m.rows(), to + 1);
+            // m.conservativeResize(to + 1, to + 1);
+            // m.col(to).setZero();
+            int orig_ncols = m.cols();
+            m.conservativeResize(to + 1, to + 1);
+            for (int i = orig_ncols; i < m.cols(); i++)
+            {
+                m.col(i).setZero();
+            }
 #if DEBUG_PRINT
             cout << "Column expanded m:\n"
                  << m << endl;
@@ -280,7 +293,10 @@ Mat read_Graph_return_Matrix(string file_name)
     {
         for (int j = 0; j < m.cols(); j++)
         {
-            m(i, j) /= col_sums[j];
+            if (col_sums[j] == 0)
+                m(i, j) = 0;
+            else
+                m(i, j) /= col_sums[j];
         }
     }
 #if DEBUG_PRINT
