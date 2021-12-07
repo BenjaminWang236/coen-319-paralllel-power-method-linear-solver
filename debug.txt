@@ -1,6 +1,7 @@
 OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Max number of threads:	16
 Starting vector: 0.333333 0.333333 0.333333
-Execution Time: 5.96701e-05
+Execution Time: 0.00224067
 Vector result of M * v_o using Modified PageRank is:
 0.212122
 0.151516

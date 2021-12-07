@@ -72,6 +72,33 @@ Vec matrix_vector_multiply(Mat A, Vec x)
     // Calculate the tile size: each thread will calculate a tile of the result
     // Tile size = number of rows of A/result divided by the number of threads
     // Last tile might have less than full tile-size
+    // Also might have more threads than there are rows to distribute
+    int tile_size = A.rows() / omp_get_max_threads();
+    if (A.rows() <= omp_get_max_threads())
+        tile_size = 1;
+#if DEBUG_PRINT
+    cout << "tile_size: " << tile_size << endl;
+#endif
+
+    long double sum = 0.0;
+    int local_tile_size = tile_size, A_rows = A.rows(), A_cols = A.cols(), x_rows = x.rows();
+    Mat A_tile;
+#pragma omp parallel for schedule(dynamic, 1) firstprivate(A_tile, local_tile_size, A_rows, A_cols, x_rows) shared(result, A, x)
+    for (int i = 0; i < A_rows; i += tile_size)
+    {
+        if (i + local_tile_size > A_rows)
+            local_tile_size = A_rows - i;
+        A_tile = A.block(i, 0, local_tile_size, A_cols);
+        for (int ii = 0; ii < local_tile_size; ii++)
+        {
+            for (int j = 0; j < x_rows; j++)
+            {
+                sum += A_tile(ii, j) * x(j);
+            }
+            result(ii) = sum;
+        }
+    }
+
     for (int i = 0; i < result.rows(); i++)
     {
         // result(i) = A.row(i).dot(x);
@@ -297,6 +324,7 @@ int main(int argc, char *argv[])
         string pagerank_file = argv[2];
         int nthreads = atoi(argv[4]);
         omp_set_num_threads(nthreads); // auto t1 = omp_get_wtime();
+        cout << "Max number of threads:\t" << omp_get_max_threads() << endl;
 
         // Read the graph file:
         // NOTE: Run in terminal with "clear && make clean && make && ./pageRank_power_iter_omp ./test/demo1.txt ./test/demo1-pr.txt -t 1 > debug.txt"
