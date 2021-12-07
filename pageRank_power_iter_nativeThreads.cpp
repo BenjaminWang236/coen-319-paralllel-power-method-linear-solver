@@ -91,7 +91,7 @@ Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
                         th_vec.clear();
                     }
                     // check if at end of A
-                    if(qend = A.cols() - 1) {
+                    if(qend == A.cols() - 1) {
                         // if so go and join all threads
                         for(int i = 0; i < th_vec.size(); i++) {
                             th_vec[i].join();

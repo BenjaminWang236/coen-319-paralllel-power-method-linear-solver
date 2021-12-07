@@ -9,7 +9,7 @@ pageRank_power_iter_omp: $(OMPSRC)
 	g++ -g -fopenmp -O3 -Wall -Wextra $(INC)  -o $@ $<
 
 pageRank_power_iter_nt: $(NTSRC)
-	# mpic++ -O3 -Wall -Wextra -Wno-cast-function-type $(INC) -o $@ $<
+	g++ -O3 -Wall -Wextra -Wno-cast-function-type $(INC) -pthread -fopenmp -o $@ $<
 
 clean: 
 	rm -vf pageRank_power_iter_omp pageRank_power_iter_nt
