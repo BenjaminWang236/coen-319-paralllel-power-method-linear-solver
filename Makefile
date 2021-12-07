@@ -6,7 +6,7 @@ INC=$(pkg-config --cflags eigen3)
 default: pageRank_power_iter_omp pageRank_power_iter_nt
 
 pageRank_power_iter_omp: $(OMPSRC)
-	g++ -g -fopenmp -O3 -Wall -Wextra $(INC)  -o $@ $<
+	g++ -fopenmp -O3 -Wall -Wextra $(INC)  -o $@ $<
 
 pageRank_power_iter_nt: $(NTSRC)
 	g++ -O3 -Wall -Wextra -Wno-cast-function-type $(INC) -pthread -fopenmp -o $@ $<
