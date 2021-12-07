@@ -29,6 +29,10 @@ typedef Eigen::Matrix<long double, Eigen::Dynamic, Eigen::Dynamic> Mat;
 using namespace std;
 using namespace Eigen;
 
+/**
+ * @brief L2 Normalization = sqrt(sum(vector_element^2))
+ * @param v (Vector) vector to L2 normalize
+ */
 long double l2_norm(Vec v)
 {
     // Parallel L2 Norm:
@@ -47,6 +51,14 @@ long double l2_norm(Vec v)
     return sqrt(sum);
 }
 
+/**
+ * @brief Check with L2 norm if the difference between two vectors is less than a threshold
+ * 
+ * @param a (Vector) 
+ * @param b (Vector)
+ * @param small_value (double) threshold for small values
+ * @return bool whether approximately equal, true if approximately equal, false otherwise
+ */
 bool vector_approx_equal(Vec a, Vec b, double small_value)
 {
     if (a.rows() != b.rows())
@@ -58,6 +70,12 @@ bool vector_approx_equal(Vec a, Vec b, double small_value)
     return (l2_norm(a - b) < small_value); // L2-Norm of vector
 }
 
+/**
+ * @brief Matrix-Vector multiplication with tiling parallelization
+ * @param A (Matrix)
+ * @param x (Vector)
+ * @return y, vector y = A * x
+ */
 Vec matrix_vector_multiply(Mat A, Vec x)
 {
     if (A.cols() != x.rows())
@@ -118,7 +136,13 @@ Vec matrix_vector_multiply(Mat A, Vec x)
     return result;
 }
 
-// Vec pageRank_power_iter_modified(Mat A, Mat orig_A, Vec v_original, Vec tp)
+/**
+ * @brief pageRank_power_iter_modified, actually computing PageRank here
+ * @param A: Matrix of the transition probability matrix
+ * @param v_original: Original vector of page ranks
+ * @param tp: Teleport probability, 0.8
+ * @return final pageRank vector
+ */
 Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
 {
     Vec result = Vec::Zero(v_original.rows());
@@ -150,6 +174,13 @@ Vec pageRank_power_iter_modified(Mat A, Vec v_original, Vec tp)
     return result;
 }
 
+/**
+ * @brief Initialize the initial pageRank vector guess to be evenly distributed guesses, calls actual PageRank algorithm
+ * 
+ * @param A PageRank Linear system of equations
+ * @param vector_length length of the final vector/number of nodes
+ * @return Vec rst Result of PageRank, the PageRank score vector used to rank nodes
+ */
 Vec pageRank_power_iter_modified_start(Mat A, int vector_length, double alpha)
 {
     // Initialize V to a guess, since this method is not starting condition-sensitive
@@ -189,6 +220,12 @@ Vec pageRank_power_iter_modified_start(Mat A, int vector_length, double alpha)
     return rst;
 }
 
+/**
+ * @brief Construct the graph from file and translate into PageRank linear system of equations
+ * 
+ * @param file_name (string) name of the graph file to read
+ * @return Mat PageRank Mat
+ */
 Mat read_Graph_return_Matrix(string file_name)
 {
     // Mat m = Mat::Constant(3, 3, 1);
@@ -214,13 +251,14 @@ Mat read_Graph_return_Matrix(string file_name)
         // vector<int> elems;
         string elem;
         // split(line, delim, elems);   // split not declared in namespace std
-        stringstream ss(line);
+        stringstream ss(line);  // Using stream operator to split the line by default delimiter " "
         ss >> elem;
         from = atoi(elem.c_str());
         ss >> elem;
         to = atoi(elem.c_str());
+        // Graph is constructed as from->to, node index starts from 0
         // cout << "from: " << from << " to: " << to << endl;
-        if (m.rows() < from + 1)
+        if (m.rows() < from + 1)    // If current matrix isn't big enough, expand squarely
         {
             // m.conservativeResize(from + 1, m.cols());
             // m.conservativeResize(from + 1, from + 1);
@@ -236,7 +274,7 @@ Mat read_Graph_return_Matrix(string file_name)
                  << m << endl;
 #endif
         }
-        if (m.cols() < to + 1)
+        if (m.cols() < to + 1)  // If current matrix isn't big enough, expand squarely
         {
             // m.conservativeResize(m.rows(), to + 1);
             // m.conservativeResize(to + 1, to + 1);
@@ -255,6 +293,7 @@ Mat read_Graph_return_Matrix(string file_name)
         m(from, to) = 1;
     }
     file.close();
+    // Redundant code from when matrix expansion wasn't squared, just in case left here to check for non-square matrices
     if (m.rows() < m.cols())
     {
         int orig_nrows = m.rows();
@@ -287,6 +326,8 @@ Mat read_Graph_return_Matrix(string file_name)
     cout << "Transposed Matrix:\n"
          << m << endl;
 #endif
+    // Now, each row of the transposed matrix corresponds to an equation of a graph node in the pageRank equation
+    // but needs to be normalized by the sum of the column
     vector<long double> col_sums; // Number of Out-Links from a node, since Column is now From/Out-Links
     for (int i = 0; i < m.cols(); i++)
     {
@@ -299,10 +340,10 @@ Mat read_Graph_return_Matrix(string file_name)
     {
         for (int j = 0; j < m.cols(); j++)
         {
-            if (col_sums[j] == 0)
+            if (col_sums[j] == 0)   // Solves divide by 0 problem, which causes nan values
                 m(i, j) = 0;
             else
-                m(i, j) /= col_sums[j];
+                m(i, j) /= col_sums[j]; // Normalize each row by the sum of the column
         }
     }
 #if DEBUG_PRINT
@@ -315,6 +356,7 @@ Mat read_Graph_return_Matrix(string file_name)
 
 /** 
  * @brief PageRank modified solved using Power Iteration Serial
+ * Driver code for the PageRank algorithm
  * 
  * Referencing the Pseudocode in tutorial:
  * @cite Mike Koltsov 
