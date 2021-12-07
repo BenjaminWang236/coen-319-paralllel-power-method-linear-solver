@@ -1,0 +1,105 @@
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/smallestcyclicgroup.txt
+Max number of threads:	1
+Starting vector: 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111
+Execution Time: 0.000115619
+Vector result of M * v_o using Modified PageRank is:
+0.0447442
+0.0293814
+0.0352576
+0.0352576
+0.0293814
+0.0622886
+0.0316243
+0.0853221
+0.0563047
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/smallestcyclicgroup.txt
+Max number of threads:	2
+Starting vector: 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111
+Execution Time: 0.000385298
+Vector result of M * v_o using Modified PageRank is:
+ 0.090309
+0.0625303
+ 0.030303
+0.0694758
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/smallestcyclicgroup.txt
+Max number of threads:	4
+Starting vector: 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111
+Execution Time: 0.000506179
+Vector result of M * v_o using Modified PageRank is:
+0.0537036
+0.0685184
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/smallestcyclicgroup.txt
+Max number of threads:	8
+Starting vector: 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111
+Execution Time: 0.000792228
+Vector result of M * v_o using Modified PageRank is:
+0.0444444
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/smallestcyclicgroup.txt
+Max number of threads:	12
+Starting vector: 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111
+Execution Time: 0.00110682
+Vector result of M * v_o using Modified PageRank is:
+0.0592593
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/smallestcyclicgroup.txt
+Max number of threads:	14
+Starting vector: 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111
+Execution Time: 0.00131577
+Vector result of M * v_o using Modified PageRank is:
+0.0444444
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+OpenMP Version of PageRank Power Iteration/Method Linear Solver
+Graph file: ./test/smallestcyclicgroup.txt
+Max number of threads:	16
+Starting vector: 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111 0.111111
+Execution Time: 0.00149084
+Vector result of M * v_o using Modified PageRank is:
+0.0444444
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222
+0.0222222

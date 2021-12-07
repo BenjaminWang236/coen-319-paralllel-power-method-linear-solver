@@ -1,0 +1,5 @@
+dodecahedral.txt
+heawood.txt
+icosahedral.txt
+smallestcyclicgroup.txt
+robertson.txt
